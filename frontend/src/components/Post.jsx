@@ -3,7 +3,55 @@ import { Box, IconButton, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 
 const Post = ({ data }) => {
-  console.log(data);
+
+  
+  const cardGeneral = {
+    // background: "#f4f4f9",
+     paddingLeft: "0px",
+ 
+   }
+ 
+   const ladoDerecho = {
+    // backgroundColor: "#f4f4f9",
+     padding: '20px',
+     boxShadow: '0 0 rgba(0, 0, 0)',
+ 
+   }
+ 
+ 
+   const quePiensas = {
+     backgroundColor: "#fff",
+     padding: '20px',
+     borderRadius:"15px",
+     boxShadow: '0 0 15px rgba(0, 0, 0, 0.5)',
+   }
+   
+   
+   
+   const buscadorContainer = {
+     flex: 1,  
+     display: "flex",
+     justifyContent: "center", 
+     width : "100%",
+   }
+ 
+ 
+   const iconoPerfil = {
+     width:"45px",
+     borderRadius: "50%",
+   }
+ 
+ 
+   const iconoCamara = {
+     width:"100%",
+     color: "green",
+     fontSize: "25px",
+   }
+
+  // Verificar si data tiene contenido y es un array antes de llamar a map()
+  if (!data || !Array.isArray(data) || data.length === 0) {
+    return null; // O podrías devolver un mensaje indicando que no hay datos
+  }
 
   return (
     <>
@@ -29,7 +77,7 @@ const Post = ({ data }) => {
             <Typography
               component="span"
               color="text.pramary"
-              sx={{ fontSize: 14 }}
+              sx={{ fontSize: 17 }}
             >
               2.1k
             </Typography>
@@ -39,7 +87,7 @@ const Post = ({ data }) => {
             <Typography
               component="span"
               color="text.pramary"
-              sx={{ fontSize: 14 }}
+              sx={{ fontSize: 17 }}
             >
               6 comments
             </Typography>

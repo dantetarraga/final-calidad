@@ -8,6 +8,8 @@ import PageHeader from "../components/PageHeader";
 import SignInForm from "../components/SignInForm";
 import SignUpFormDialog from "../components/SignUpFormDialog";
 import SocialLinks from "../components/SocialLinks";
+import LoginGoogle from "./LoginGoogle";
+
 
 const SignInPage = () => {
   const [open, setOpen] = useState(false);
@@ -114,7 +116,15 @@ const SignInPage = () => {
             >
               Crear Cuenta
             </Button>
+            
+            <LoginGoogle />
+
+            
+          
+            
+
           </Grid>
+
         </Grid>
         <SignUpFormDialog open={open} onClose={handleCloseDialog} />
       </Paper>
