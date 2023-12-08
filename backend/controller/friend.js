@@ -107,7 +107,7 @@ class FriendController {
 
   static async getFriends(req, res) {
     try {
-      const usuarioId = "65722faa80c044c007d55362";
+      const usuarioId = req.session.userId;
 
       const usuario = await User.findById(usuarioId);
 
