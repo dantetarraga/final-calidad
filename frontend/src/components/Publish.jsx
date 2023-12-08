@@ -11,7 +11,8 @@ const Perfil = () => {
 
   const ladoDerecho = {
    // backgroundColor: "#f4f4f9",
-    padding: '20px',
+    padding: '10px',
+
     boxShadow: '0 0 rgba(0, 0, 0)',
 
   }
@@ -22,6 +23,7 @@ const Perfil = () => {
     padding: '20px',
     borderRadius:"15px",
     boxShadow: '0 0 15px rgba(0, 0, 0, 0.5)',
+    
   }
   
   

@@ -18,6 +18,13 @@ const SideBar = ({ anchor }) => {
   const [dataUser, setDataUser] = useState({});
   const [imgUser, setImgUser] = useState({});
 
+  const [amigos, setAmigos] = useState([
+    { id: 1, nombre: "Amigo 1", apellidos: "Apellido", fotoPerfil: "url1" },
+    { id: 2, nombre: "Amigo 2", apellidos: "Apellido", fotoPerfil: "url2" },
+    { id: 3, nombre: "Amigo 3", apellidos: "Apellido", fotoPerfil: "url2" },
+    { id: 4, nombre: "Amigo 4", apellidos: "Apellido", fotoPerfil: "url2" },
+  ]);
+
   useEffect(() => {
     const token = localStorage.getItem("token");
 
