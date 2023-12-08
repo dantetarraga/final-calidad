@@ -1,3 +1,5 @@
+import React, { useState } from "react";
+
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import SearchIcon from "@mui/icons-material/Search";
@@ -9,6 +11,8 @@ import IconButton from "@mui/material/IconButton";
 import InputBase from "@mui/material/InputBase";
 import Toolbar from "@mui/material/Toolbar";
 import { alpha, styled } from "@mui/material/styles";
+import Chat from "./Chat"; // Asegúrate de tener tu componente de Chat creado
+
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -55,6 +59,12 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 const NavBar = () => {
   const drawerWidth = 282;
 
+  const [showChat, setShowChat] = useState(false);
+
+  const handleChatToggle = () => {
+    setShowChat(!showChat);
+  };
+
   return (
     <AppBar
       position="fixed"
@@ -79,10 +89,11 @@ const NavBar = () => {
         </Search>
         <Box sx={{ flexGrow: 1 }} />
         <Box sx={{ display: { xs: "none", md: "flex", columnGap: 10 } }}>
-          <IconButton
+        <IconButton
             size="large"
             aria-label="show 4 new mails"
             color="inherit"
+            onClick={handleChatToggle}
           >
             <Badge badgeContent={4} color="error">
               <MailIcon />
@@ -111,6 +122,8 @@ const NavBar = () => {
           </IconButton>
         </Box>
       </Toolbar>
+      {showChat && <Chat onClose={handleChatToggle} />}
+
     </AppBar>
   );
 };
