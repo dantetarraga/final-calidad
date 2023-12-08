@@ -159,14 +159,15 @@ class FriendController {
 
     const users = await User.find().select("nombre apellidos sexo foto_perfil");
 
-    const suggestions = users.filter(
-      (user) =>
+    const suggestions = users.filter((user) => {
+      return (
         !usuario.amigos.includes(user._id) &&
         !usuario.solicitudes_amistad.find(
           (solicitud) => solicitud.usuario == user._id
         ) &&
-        user._id != usuario._id
-    );
+        !user._id.equals(usuario._id)
+      );
+    });
 
     return res.status(200).json(suggestions);
   }
