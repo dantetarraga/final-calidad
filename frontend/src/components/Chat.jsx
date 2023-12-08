@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import { Close as CloseIcon, ThumbUpAltOutlined } from "@mui/icons-material";
+import io from "socket.io-client";
 
 import MessageInput from "./MessageInput"; // Asegúrate de tener tu componente de MessageInput creado
 
@@ -9,6 +10,21 @@ const Chat = ({ onClose, appBarBackgroundColor }) => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
   const messagesEndRef = useRef(null);
+  const socketRef = useRef();
+
+
+  useEffect(() => {
+    socketRef.current = io("http://localhost:3000"); // Reemplaza con la URL de tu servidor Socket.IO
+
+    socketRef.current.on("newMessage", (newMessage) => {
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+      scrollToBottom();
+    });
+
+    return () => {
+      socketRef.current.disconnect();
+    };
+  }, []);
 
   const scrollToBottom = () => {
     if (messagesEndRef.current) {
@@ -16,11 +32,23 @@ const Chat = ({ onClose, appBarBackgroundColor }) => {
     }
   };
 
-  useEffect(() => {
-    scrollToBottom();
-    
-  }, [messages]);
+  const sendMessage = () => {
+    if (message.trim() !== '') {
+      const newMessage = { text: message, user: 'Usuario' };
+      socketRef.current.emit("sendMessage", newMessage);
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+      setMessage('');
+    }
+  };
 
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      sendMessage();
+    }
+  };
+
+/*
   const sendMessage = () => {
     if (message.trim() !== '') {
       setMessages(prevMessages => [
@@ -37,6 +65,7 @@ const Chat = ({ onClose, appBarBackgroundColor }) => {
       sendMessage();
     }
   };
+  */
 
   const chatStyle = {
     border: `2px solid`,
