@@ -8,5 +8,6 @@ friendRouter.post("/enviar-solicitud", FriendController.sendRequest);
 friendRouter.post("/rechazar-solicitud", FriendController.rejectRequest);
 friendRouter.get("/amigos", FriendController.getFriends);
 friendRouter.get("/solicitudes", FriendController.getFriendRequests);
+friendRouter.get("/sugerencias", FriendController.suggestFriends);
 
 export default friendRouter;

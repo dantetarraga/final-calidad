@@ -148,6 +148,28 @@ class FriendController {
 
     return res.status(200).json(solicitudes);
   }
+
+  static async suggestFriends(req, res) {
+    const usuarioId = req.session.userId;
+
+    const usuario = await User.findById(usuarioId);
+
+    if (!usuario)
+      return res.status(404).json({ error: "Usuario no encontrado" });
+
+    const users = await User.find().select("nombre apellidos sexo foto_perfil");
+
+    const suggestions = users.filter(
+      (user) =>
+        !usuario.amigos.includes(user._id) &&
+        !usuario.solicitudes_amistad.find(
+          (solicitud) => solicitud.usuario == user._id
+        ) &&
+        user._id != usuario._id
+    );
+
+    return res.status(200).json(suggestions);
+  }
 }
 
 export default FriendController;

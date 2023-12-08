@@ -27,3 +27,17 @@ export const getFriendRequests = async () => {
 
   return ajax(config);
 };
+
+export const suggestFriends = async () => {
+  const config = {
+    method: "GET",
+    url: "http://localhost:3000/sugerencias",
+    withCredentials: true,
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+  };
+
+  return ajax(config);
+};
