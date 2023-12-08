@@ -14,16 +14,18 @@ import { useEffect, useState } from "react";
 import { arrayBufferToBase64 } from "../../utils/arrayBuffer";
 import { getDataUser, getImgPerfil } from "../services/user";
 
-const SideBar = ({ anchor }) => {
+const SideBarFriends = ({ anchor }) => {
   const [dataUser, setDataUser] = useState({});
   const [imgUser, setImgUser] = useState({});
 
-  const [amigos, setAmigos] = useState([
-    { id: 1, nombre: "Amigo 1", apellidos: "Apellido", fotoPerfil: "url1" },
-    { id: 2, nombre: "Amigo 2", apellidos: "Apellido", fotoPerfil: "url2" },
-    { id: 3, nombre: "Amigo 3", apellidos: "Apellido", fotoPerfil: "url2" },
-    { id: 4, nombre: "Amigo 4", apellidos: "Apellido", fotoPerfil: "url2" },
-  ]);
+  const handleChatWithFriend = (friend) => {
+    // Aquí puedes implementar la lógica para iniciar un chat con el amigo seleccionado
+    // Por ejemplo, podrías abrir el chat correspondiente utilizando su información
+    console.log(`Iniciar chat con ${friend.nombre}`);
+    // Lógica para iniciar el chat con el amigo seleccionado...
+  };
+
+ 
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -50,9 +52,15 @@ const SideBar = ({ anchor }) => {
 
   const list = () => (
     <List>
-      {menuOptions.map((option) => (
+      {menuOptions.map((option, index) => (
         <ListItem key={option.text}>
           <ListItemButton
+            onClick={() => {
+              // Ignoramos los primeros elementos, ya que no son los amigos
+              if (index > 4) {
+                handleChatWithFriend(option.text);
+              }
+            }}
             sx={{
               "&:hover": {
                 backgroundColor: (theme) => theme.palette.drawer.hover,
@@ -78,7 +86,7 @@ const SideBar = ({ anchor }) => {
         },
       }}
       variant="permanent"
-      anchor={anchor}
+      anchor={anchor} // Asegúrate de pasar "right" como valor de anchor
     >
       <Box
         sx={{
@@ -92,8 +100,8 @@ const SideBar = ({ anchor }) => {
   );
 };
 
-SideBar.propTypes = {
+SideBarFriends.propTypes = {
   anchor: PropTypes.string.isRequired,
 };
 
-export default SideBar;
+export default SideBarFriends;

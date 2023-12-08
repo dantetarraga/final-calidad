@@ -11,7 +11,7 @@ import IconButton from "@mui/material/IconButton";
 import InputBase from "@mui/material/InputBase";
 import Toolbar from "@mui/material/Toolbar";
 import { alpha, styled } from "@mui/material/styles";
-import Chat from "./Chat"; // Asegúrate de tener tu componente de Chat creado
+import Chat from "./Chat";
 
 
 const Search = styled("div")(({ theme }) => ({
@@ -82,7 +82,7 @@ const NavBar = () => {
           <SearchIconWrapper>
             <SearchIcon />
           </SearchIconWrapper>
-          <StyledInputBase
+          <StyledInputBase  
             placeholder="Search…"
             inputProps={{ "aria-label": "search" }}
           />
@@ -122,7 +122,7 @@ const NavBar = () => {
           </IconButton>
         </Box>
       </Toolbar>
-      {showChat && <Chat onClose={handleChatToggle} />}
+      {showChat && <Chat onClose={handleChatToggle} appBarBackgroundColor="#212330" />} 
 
     </AppBar>
   );
