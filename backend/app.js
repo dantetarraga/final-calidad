@@ -10,6 +10,8 @@ import { Server } from "socket.io";
 import { fileURLToPath } from "url";
 import "./config/database.js";
 import authRouter from "./routes/auth.js";
+import commentRouter from "./routes/comment.js";
+import friendRouter from "./routes/friend.js";
 import postRouter from "./routes/post.js";
 import userRouter from "./routes/user.js";
 
@@ -39,10 +41,6 @@ io.on("connection", (socket) => {
 
 const PORT = process.env.PORT || 3000;
 
-// app.get("/", (req, res) => {
-//   res.send("Hello World!");
-// });
-
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(
@@ -70,6 +68,8 @@ app.use(express.json());
 app.use("/", authRouter);
 app.use("/", userRouter);
 app.use("/", postRouter);
+app.use("/", commentRouter);
+app.use("/", friendRouter);
 
 app.get("/", function (req, res, next) {
   if (req.session.views) {

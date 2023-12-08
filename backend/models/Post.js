@@ -4,7 +4,7 @@ import { getDateTimePeru } from "../utils/dateTime.js";
 const PostSchema = new Schema({
   usuario: {
     type: Schema.Types.ObjectId,
-    ref: "Usuario",
+    ref: "User",
     required: true,
   },
   contenido: {

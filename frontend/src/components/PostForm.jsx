@@ -4,41 +4,14 @@ import {
   GifBoxRounded,
   VideoLibrary,
 } from "@mui/icons-material";
-import {
-  Avatar,
-  Box,
-  Button,
-  IconButton,
-  InputBase,
-  alpha,
-  styled,
-} from "@mui/material";
+import { Avatar, Box, Button, IconButton } from "@mui/material";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import {
   createPostWithMultimedia,
   createPostWithOutMultimedia,
 } from "../services/post";
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(1)})`,
-    width: "100%",
-  },
-}));
-
-const Input = styled("div")(({ theme }) => ({
-  borderRadius: theme.shape.borderRadius,
-  display: "flex",
-  flexGrow: 1,
-  marginLeft: theme.spacing(1),
-  backgroundColor: "#434557",
-  "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  width: "100%",
-}));
+import { Input, StyledInputBase } from "./Input";
 
 const optionsButtons = [
   {
@@ -61,7 +34,7 @@ const PostForm = ({ foto_perfil }) => {
     contenido: "",
     tipoMultimedia: "",
     multimedia: null,
-    usuario: "656970991ca7ec425d3ad727",
+    usuario: "",
   });
 
   const handleInputChange = (event) => {
@@ -96,6 +69,7 @@ const PostForm = ({ foto_perfil }) => {
     }
   };
   const handleFileTypeChange = (accept) => {
+    console.log("handleFileTypeChange");
     fileInput.accept = accept;
     fileInput.click();
   };

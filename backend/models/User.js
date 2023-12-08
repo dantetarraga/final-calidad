@@ -36,14 +36,14 @@ const UserSchema = new Schema({
   amigos: [
     {
       type: Schema.Types.ObjectId,
-      ref: "Usuario",
+      ref: "User",
     },
   ],
   solicitudes_amistad: [
     {
       usuario: {
         type: Schema.Types.ObjectId,
-        ref: "Usuario",
+        ref: "User",
         required: true,
       },
       estado: {

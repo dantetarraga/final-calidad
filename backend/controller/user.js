@@ -25,6 +25,22 @@ class UserController {
     }
   }
 
+  static async getUserDataById(req, res) {
+    const id = req.query.id;
+
+    if (!id)
+      return res
+        .status(400)
+        .json({ message: "No se proporcionó el ID del usuario." });
+
+    const user = await User.findById(id);
+
+    if (!user)
+      return res.status(404).json({ message: "Usuario no encontrado." });
+
+    return res.status(200).json(user);
+  }
+
   static async getImgProfileUser(req, res) {
     try {
       const userId = req.session.userId;

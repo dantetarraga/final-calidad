@@ -11,28 +11,22 @@ import {
 } from "@mui/material";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import { arrayBufferToBase64 } from "../../utils/arrayBuffer";
-import { getDataUser, getImgPerfil } from "../services/user";
+import { getDataUser } from "../services/user";
 
 const SideBar = ({ anchor }) => {
   const [dataUser, setDataUser] = useState({});
-  const [imgUser, setImgUser] = useState({});
 
   useEffect(() => {
     const token = localStorage.getItem("token");
 
     (async () => setDataUser(await getDataUser(token)))();
-    (async () => {
-      const imageUrl = arrayBufferToBase64(await getImgPerfil(token));
-      setImgUser(imageUrl);
-    })();
   }, []);
   const drawerWidth = 282;
 
   const menuOptions = [
     {
       text: String(dataUser.nombre).concat(" ", dataUser.apellidos),
-      icon: <Avatar src={String(imgUser)} alt="Foto de perfil" />,
+      icon: <Avatar src={dataUser.foto_perfil} alt="Foto de perfil" />,
     },
     { text: "inicio", icon: <Home /> },
     { text: "Mensajes", icon: <Forum /> },

@@ -14,6 +14,20 @@ export const getDataUser = async ({ token }) => {
   return await ajax(config);
 };
 
+export const getInfoUser = async (id) => {
+  const config = {
+    method: "GET",
+    url: "http://localhost:3000/get-user-info?id=" + id,
+    withCredentials: true,
+    headers: {
+      "Content-Type": "application/json",
+      // Authorization: `Bearer ${token}`,
+    },
+  };
+
+  return await ajax(config);
+};
+
 export const getImgPerfil = async ({ token }) => {
   const config = {
     method: "GET",
