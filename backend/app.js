@@ -6,16 +6,12 @@ import express from "express";
 import session from "express-session";
 import { createServer } from "node:http";
 import path, { dirname } from "path";
-import { Server as SocketServer} from "socket.io";
+import { Server as SocketServer } from "socket.io";
 import { fileURLToPath } from "url";
 import "./config/database.js";
-import authRouter from "./routes/auth.js";
-import postRouter from "./routes/post.js";
-import userRouter from "./routes/user.js";
-import { Socket } from "node:dgram";
-import Message from "./models/Message.js";
-import { getDateTimePeru } from "./utils/dateTime.js";
 
+// Importa el controlador de mensajes
+import messageController from "./controller/message.js"; // Asegúrate de tener la ruta correcta
 
 export const __filename = fileURLToPath(import.meta.url);
 export const __dirname = dirname(__filename);
@@ -23,44 +19,43 @@ export const __dirname = dirname(__filename);
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-const server = createServer(app);
 
+const server = createServer(app);
 const io = new SocketServer(server);
 
-
 io.on("connection", (socket) => {
-  console.log("Cliente conectado");
   console.log(socket.id);
 
   socket.on("message", async (data) => {
     try {
-      const { contenido, remitente, receptor } = data;
-      const newMessage = new Message({
-        contenido,
-        remitente,
-        receptor,
-        fecha_envio: getDateTimePeru(), // Actualizar la fecha de envío si es necesario
-      });
-      await newMessage.save();
-      
-      io.emit("message", newMessage);
-    } catch (error) {
-      console.error("Error al guardar el mensaje:", error);
-    }
-  });
+      // Crea un nuevo mensaje utilizando el controlador
+      const newMessage = await messageController.createMessage(data);
 
-  socket.on("disconnect", () => {
-    console.log("Usuario desconectado");
+      // Emite el mensaje a todos los clientes conectados
+      io.emit("message", {
+        contenido: newMessage.contenido,
+        from: newMessage.remitente,
+      });
+      console.error("MENSAJE GUARDADO");
+
+    } catch (error) {
+
+      console.log(data)
+      console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+      console.log(data.from)
+      console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+
+      console.log(data.contenido)
+      console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+
+      console.log(data.remitente)
+
+      console.error('Error al guardar el mensaje CON SOCKETS:', error);
+    }
   });
 });
 
-
-
 const PORT = process.env.PORT || 3000;
-
-// app.get("/", (req, res) => {
-//   res.send("Hello World!");
-// });
 
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -78,7 +73,7 @@ app.use(
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "*", // Esto permitirá solicitudes desde cualquier origen
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
   })
@@ -86,8 +81,15 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 
+// Asegúrate de tener las rutas correctas para los routers
+import authRouter from "./routes/auth.js";
+import postRouter from "./routes/post.js";
+import userRouter from "./routes/user.js";
+import messageRouter from './routes/message.js';
+
 app.use("/", authRouter);
 app.use("/", userRouter);
+app.use("/", messageRouter);
 app.use("/", postRouter);
 
 app.get("/", function (req, res, next) {

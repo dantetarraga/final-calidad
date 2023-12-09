@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -12,13 +13,14 @@ const socket = io("/");
 const MessageInput = ({ message, setMessage, sendMessage }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(message);
     socket.emit('message', message);
     sendMessage();
   };
 
   useEffect(() => {
     socket.on('message', message => {
+      console.log("MUESTRA MENSAJE");
+
       console.log(message);
     });
   }, []);
@@ -66,90 +68,78 @@ const Chat = ({ onClose, appBarBackgroundColor }) => {
 
   const sendMessage = () => {
     if (message.trim() !== '') {
-      const newMessage = { text: message, user: 'Usuario' };
-      socketRef.current.emit("sendMessage", newMessage);
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
+      const newMessage = {
+        contenido: message, // Define el contenido del mensaje
+        remitente: '6574a78d5968d60c58b47a7b', // Define el ID del remitente
+        receptor: '6573a47b88f1c14e2c7d680e' // Define el ID del receptor
+      };
+  
+      socketRef.current.emit("message", newMessage); // Envia el mensaje al servidor
       setMessage('');
     }
   };
 
-  const headerStyle = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '8px 16px',
-    borderBottom: '1px solid #ccc',
-  };
-
-  const closeButtonStyle = {
-    marginLeft: 'auto',
-  };
-
-  const chatContentStyle = {
-    flex: 1,
-    overflowY: 'scroll',
-    padding: '16px',
-  };
-
-  const messageInputContainerStyle = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '8px 20px',
-    borderTop: '1px solid #ccc',
-    borderBottom: '1px solid #ccc',
-  };
-
-  const messageStyle = {
-    backgroundColor: '#3b5998',
-    color: '#fff',
-    padding: '8px 12px',
-    borderRadius: '20px',
-    marginBottom: '8px',
-    maxWidth: '70%',
-  };
-
-  const chatStyle = {
-    border: `2px solid`,
-    borderRadius: '10px',
-    position: 'fixed',
-    bottom: '3px',
-    right: '300px',
-    zIndex: 999,
-    backgroundColor: appBarBackgroundColor,
-    height: '400px',
-    display: 'flex',
-    flexDirection: 'column',
-  };
-
   return (
-    <Box className="chat-container" style={chatStyle}>
-      <Box className="chat-header" style={headerStyle}>
-        <h2>Chat en Vivo</h2>
-        <IconButton onClick={onClose} style={closeButtonStyle}>
-          <CloseIcon />
-        </IconButton>
+    <Box
+      style={{
+        border: `2px solid`,
+        borderRadius: '10px',
+        position: 'fixed',
+        bottom: '3px',
+        right: '300px',
+        zIndex: 999,
+        backgroundColor: appBarBackgroundColor,
+        height: '400px',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <Box
+        style={{
+          flex: 1,
+          overflowY: 'scroll',
+          padding: '16px',
+        }}
+      >
+        {messages.map((msg, index) => (
+          <div
+            key={index}
+            style={{
+              backgroundColor: msg.user === 'Usuario' ? '#3b5998' : '#000',
+              color: msg.user === 'Usuario' ? '#fff' : '#000',
+              padding: '8px 12px',
+              borderRadius: '20px',
+              marginBottom: '8px',
+              maxWidth: '70%',
+              alignSelf: msg.user === 'Usuario' ? 'flex-end' : 'flex-start',
+            }}
+          >
+            {msg.text && <span>{msg.user}</span>}
+            {msg.text && <p>{msg.text}</p>}
+          </div>
+        ))}
+        <div ref={messagesEndRef} />
       </Box>
-      <Box className="chat-messages" style={chatContentStyle}>
-  {messages.map((msg, index) => (
-    <div key={index} className="message" style={messageStyle}>
-      {msg.text && <span>{msg.user}</span>}
-      {msg.text && <p>{msg.text}</p>}
-    </div>
-  ))}
-  <div ref={messagesEndRef} />
-</Box>
-      <Box className="message-input" style={messageInputContainerStyle}>
+      <Box
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          padding: '8px 20px',
+          borderTop: '1px solid #ccc',
+        }}
+      >
         <MessageInput
           message={message}
           setMessage={setMessage}
           sendMessage={sendMessage}
         />
+        <IconButton onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
       </Box>
     </Box>
   );
 };
 
 export default Chat;
-
-

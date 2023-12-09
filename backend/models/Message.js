@@ -1,30 +1,26 @@
-import { Schema } from "mongoose";
-import { model } from "mongoose";
+import mongoose from 'mongoose';
 
-import { getDateTimePeru } from "../utils/dateTime";
-
-
-const MessageSchema = new Schema({
+const MessageSchema = new mongoose.Schema({
   contenido: {
     type: String,
     required: true,
   },
   remitente: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: 'User',
     required: true,
   },
   receptor: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: 'User',
     required: true,
   },
   fecha_envio: {
-    type: String,
-    default: getDateTimePeru(),
+    type: Date, // Utiliza el tipo Date para almacenar el timestamp
+    default: Date.now, // Establece la fecha de envío como la fecha actual al crear el documento
   },
 });
 
-const Message = model("Message", MessageSchema);
+const Message = mongoose.model('Message', MessageSchema);
 
 export default Message;

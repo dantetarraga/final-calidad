@@ -12,6 +12,6 @@ const ConversationSchema = new Schema({
   mensajes: [Message.schema],
 });
 
-const Conversation = model("Conversation", ConversationSchema);
+const Conversacion = model("Conversacion", ConversationSchema);
 
-export default Conversation;
+export default Conversacion;
