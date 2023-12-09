@@ -1,5 +1,8 @@
 import { Schema } from "mongoose";
+import { model } from "mongoose";
+
 import { getDateTimePeru } from "../utils/dateTime";
+
 
 const MessageSchema = new Schema({
   contenido: {

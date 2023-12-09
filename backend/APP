@@ -13,9 +13,6 @@ import authRouter from "./routes/auth.js";
 import postRouter from "./routes/post.js";
 import userRouter from "./routes/user.js";
 import { Socket } from "node:dgram";
-import Message from "./models/Message.js";
-import { getDateTimePeru } from "./utils/dateTime.js";
-
 
 export const __filename = fileURLToPath(import.meta.url);
 export const __dirname = dirname(__filename);
@@ -26,34 +23,25 @@ app.use(bodyParser.json());
 const server = createServer(app);
 
 const io = new SocketServer(server);
-
+/*
+const io = new SocketServer(server, {
+  cors: {
+    origin: "*",
+  },
+});
+*/
 
 io.on("connection", (socket) => {
   console.log("Cliente conectado");
   console.log(socket.id);
-
-  socket.on("message", async (data) => {
-    try {
-      const { contenido, remitente, receptor } = data;
-      const newMessage = new Message({
-        contenido,
-        remitente,
-        receptor,
-        fecha_envio: getDateTimePeru(), // Actualizar la fecha de envío si es necesario
-      });
-      await newMessage.save();
-      
-      io.emit("message", newMessage);
-    } catch (error) {
-      console.error("Error al guardar el mensaje:", error);
-    }
-  });
-
-  socket.on("disconnect", () => {
-    console.log("Usuario desconectado");
+  socket.on("message", (body) => {//backend escucha
+    console.log(body)
+    socket.broadcast.emit("message", {//backend envia
+      body,
+      from: socket.id.slice(8),
+    });
   });
 });
-
 
 
 const PORT = process.env.PORT || 3000;
