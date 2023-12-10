@@ -1,5 +1,6 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import HomePage from "./pages/HomePage";
+import Perfil from "./pages/Perfil";
 import SignInPage from "./pages/SignInPage";
 
 // const socket = io("/");
@@ -12,6 +13,14 @@ const route = createBrowserRouter([
   {
     path: "/home",
     element: <HomePage />,
+  },
+  {
+    path: "/perfil",
+    element: <Perfil />,
+  },
+  {
+    path: "*",
+    element: <h1>404</h1>,
   },
 ]);
 
