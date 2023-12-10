@@ -14,6 +14,8 @@ import commentRouter from "./routes/comment.js";
 import friendRouter from "./routes/friend.js";
 import postRouter from "./routes/post.js";
 import userRouter from "./routes/user.js";
+import messageController from "./controller/message.js";
+import messageRouter from './routes/message.js';
 
 export const __filename = fileURLToPath(import.meta.url);
 export const __dirname = dirname(__filename);
@@ -57,7 +59,7 @@ app.use(
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "*", 
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
   })
@@ -70,6 +72,7 @@ app.use("/", userRouter);
 app.use("/", postRouter);
 app.use("/", commentRouter);
 app.use("/", friendRouter);
+app.use("/", messageRouter);
 
 app.get("/", function (req, res, next) {
   if (req.session.views) {
@@ -89,3 +92,7 @@ app.get("/", function (req, res, next) {
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+//NUEVO
+//NUEVO
+//NUEVO
+//NUEVO
