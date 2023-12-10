@@ -4,7 +4,7 @@ import generateToken from "../utils/authToken.js";
 class AuthController {
   static async register(req, res) {
     try {
-      const foto_perfil = "http://localhost:3000/default-img.webp";
+      const foto_perfil = "http://localhost:3000/default-img.png";
       const user = new User({ ...req.body, foto_perfil: foto_perfil });
 
       await user.save();

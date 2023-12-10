@@ -66,7 +66,10 @@ const HomePage = () => {
             }}
           >
             <Box sx={{ mb: 7 }}>
-              <NavBar user={dataUser} />
+              <NavBar
+                user={dataUser}
+                solicitudes={dataUser.solicitudes_amistad}
+              />
             </Box>
             <Toolbar />
             <Grid container spacing={5}>

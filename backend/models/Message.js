@@ -1,5 +1,5 @@
-import { Schema } from "mongoose";
-import { getDateTimePeru } from "../utils/dateTime";
+import { model, Schema } from "mongoose";
+import { getDateTimePeru } from "../utils/dateTime.js";
 
 const MessageSchema = new Schema({
   contenido: {
@@ -7,12 +7,12 @@ const MessageSchema = new Schema({
     required: true,
   },
   remitente: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "User",
     required: true,
   },
   receptor: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "User",
     required: true,
   },

@@ -56,3 +56,18 @@ export const addFriend = async (receptorId) => {
 
   return ajax(config);
 };
+
+export const acceptFriendRequest = async (amigoId) => {
+  const config = {
+    method: "POST",
+    url: "http://localhost:3000/agregar-amigo",
+    withCredentials: true,
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    data: { amigoId },
+  };
+
+  return ajax(config);
+};

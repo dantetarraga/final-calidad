@@ -1,7 +1,14 @@
+import { Chat } from "@mui/icons-material";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import SearchIcon from "@mui/icons-material/Search";
-import { Avatar, Button } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  ListItemButton,
+  ListItemText,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
@@ -11,6 +18,7 @@ import Toolbar from "@mui/material/Toolbar";
 import { alpha, styled } from "@mui/material/styles";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
+import { acceptFriendRequest } from "../services/friend";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -53,19 +61,41 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const NavBar = ({ user }) => {
+const NavBar = ({ user, solicitudes }) => {
   const [notifications, setNotifications] = useState(0);
+  const [solicitudesAmistad, setSolicitudesAmistad] = useState([]);
+  const [notificationMenu, setNotificationMenu] = useState(null);
+  const [showChat, setShowChat] = useState(false);
+
+  const handleChatToggle = () => {
+    setShowChat(!showChat);
+  };
   const drawerWidth = 282;
 
-  const countNotifications = () =>
-    setNotifications(user.solicitudes_amistad.length);
+  const handleAcceptFriendRequest = async (solicitud) => {
+    await acceptFriendRequest(solicitud._id);
+  };
 
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      countNotifications();
-    }, 1000);
-    return () => clearTimeout(timeoutId);
-  }, []);
+    const notificationsLength = user.solicitudes_amistad
+      ? user.solicitudes_amistad.length
+      : 0;
+
+    const solicitudesAmistad = user.solicitudes_amistad
+      ? user.solicitudes_amistad
+      : [];
+
+    setSolicitudesAmistad(solicitudesAmistad);
+    setNotifications(notificationsLength);
+  }, [solicitudes, user]);
+
+  const handleNotificationMenuOpen = (event) => {
+    setNotificationMenu(event.currentTarget);
+  };
+
+  const handleNotificationMenuClose = () => {
+    setNotificationMenu(null);
+  };
 
   return (
     <AppBar
@@ -78,9 +108,9 @@ const NavBar = ({ user }) => {
     >
       <Toolbar sx={{ height: 90 }}>
         <Button color="secondary" variant="contained" sx={{ mr: 2 }}>
-          Explore
+          Only Students
         </Button>
-        <Search>
+        {/* <Search>
           <SearchIconWrapper>
             <SearchIcon />
           </SearchIconWrapper>
@@ -88,13 +118,14 @@ const NavBar = ({ user }) => {
             placeholder="Search…"
             inputProps={{ "aria-label": "search" }}
           />
-        </Search>
+        </Search> */}
         <Box sx={{ flexGrow: 1 }} />
         <Box sx={{ display: { xs: "none", md: "flex", columnGap: 10 } }}>
           <IconButton
             size="large"
             aria-label="show 4 new mails"
             color="inherit"
+            onClick={handleChatToggle}
           >
             <Badge badgeContent={4} color="error">
               <MailIcon />
@@ -104,6 +135,7 @@ const NavBar = ({ user }) => {
             size="large"
             aria-label="show 17 new notifications"
             color="inherit"
+            onClick={handleNotificationMenuOpen}
           >
             <Badge badgeContent={notifications} color="error">
               <NotificationsIcon />
@@ -122,13 +154,36 @@ const NavBar = ({ user }) => {
             <Avatar alt={user.nombre} src={user.foto_perfil} />
           </IconButton>
         </Box>
+        <Menu
+          anchorEl={notificationMenu}
+          open={Boolean(notificationMenu)}
+          onClose={handleNotificationMenuClose}
+        >
+          {solicitudesAmistad.map((solicitud) => {
+            return (
+              <MenuItem
+                key={solicitud._id}
+                onClick={handleNotificationMenuClose}
+              >
+                <ListItemText primary={solicitud.usuario} />
+                <ListItemButton onClick={handleAcceptFriendRequest}>
+                  <Button variant="contained" color="success">
+                    Aceptar
+                  </Button>
+                </ListItemButton>
+              </MenuItem>
+            );
+          })}
+        </Menu>
       </Toolbar>
+      {showChat && <Chat onClose={handleChatToggle} />}
     </AppBar>
   );
 };
 
 NavBar.propTypes = {
   user: PropTypes.object,
+  solicitudes: PropTypes.array,
 };
 
 export default NavBar;

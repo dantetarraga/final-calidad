@@ -6,7 +6,7 @@ class FriendController {
       // const usuarioId = req.session.userId;
       const usuarioId = req.body.usuarioId;
       const amigoId = req.body.amigoId;
-      const estado = req.body.estado;
+      const estado = req.body.estado || "aceptado";
 
       const usuario = await User.findById(usuarioId);
       const amigo = await User.findById(amigoId);

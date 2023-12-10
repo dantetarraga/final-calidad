@@ -6,12 +6,14 @@ import express from "express";
 import session from "express-session";
 import { createServer } from "node:http";
 import path, { dirname } from "path";
-import { Server } from "socket.io";
+import { Server as SocketServer } from "socket.io";
 import { fileURLToPath } from "url";
 import "./config/database.js";
+import messageController from "./controller/message.js";
 import authRouter from "./routes/auth.js";
 import commentRouter from "./routes/comment.js";
 import friendRouter from "./routes/friend.js";
+import messageRouter from "./routes/message.js";
 import postRouter from "./routes/post.js";
 import userRouter from "./routes/user.js";
 
@@ -23,19 +25,39 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 const server = createServer(app);
-const io = new Server(server, {
+const io = new SocketServer(server, {
   cors: {
     origin: "*",
   },
 });
+// const io = new Server(server, {
+//   cors: {
+//     origin: "*",
+//   },
+// });
 
 io.on("connection", (socket) => {
-  console.log(socket.id);
-  socket.on("message", (body) => {
-    socket.broadcast.emit("message", {
-      body,
-      from: socket.id.slice(8),
-    });
+  // console.log(socket.id);
+
+  socket.on("message", async (data) => {
+    try {
+      const newMessage = await messageController.createMessage(data);
+
+      io.emit("message", {
+        contenido: newMessage.contenido,
+        from: newMessage.remitente,
+      });
+      console.error("MENSAJE GUARDADO");
+    } catch (error) {
+      console.log(data);
+      console.log(data.from);
+
+      console.log(data.contenido);
+
+      console.log(data.remitente);
+
+      console.error("Error al guardar el mensaje CON SOCKETS:", error);
+    }
   });
 });
 
@@ -70,21 +92,7 @@ app.use("/", userRouter);
 app.use("/", postRouter);
 app.use("/", commentRouter);
 app.use("/", friendRouter);
-
-app.get("/", function (req, res, next) {
-  if (req.session.views) {
-    req.session.views++;
-    res.setHeader("Content-Type", "text/html");
-    res.write("<p>views: " + req.session.views + "</p>");
-    res.write("<p>User: " + req.session.userId + "</p>");
-
-    res.write("<p>expires in: " + req.session.cookie.maxAge / 1000 + "s</p>");
-    res.end();
-  } else {
-    req.session.views = 1;
-    res.end("welcome to the session demo. refresh!");
-  }
-});
+app.use("/", messageRouter);
 
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
