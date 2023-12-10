@@ -2,7 +2,6 @@ import { Box, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 
 const ProfileInfo = ({ data }) => {
-  console.log(data);
   if (!data || !Array.isArray(data) || data.length === 0) {
     return null;
   }
@@ -23,7 +22,7 @@ const ProfileInfo = ({ data }) => {
 };
 
 ProfileInfo.propTypes = {
-  data: PropTypes.array,
+  data: PropTypes.object,
 };
 
 export default ProfileInfo;

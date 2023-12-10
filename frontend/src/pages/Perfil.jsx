@@ -38,7 +38,7 @@ const MainContent2 = ({ foto_perfil, data }) => (
 
 MainContent2.propTypes = {
   foto_perfil: PropTypes.string,
-  data: PropTypes.array,
+  data: PropTypes.object,
 };
 
 const theme = createTheme({
@@ -76,7 +76,6 @@ const Perfil = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     (async () => setDataUser(await getDataUser(token)))();
-    console.log(dataUser);
   }, []);
 
   const cardGeneral = {
@@ -97,7 +96,7 @@ const Perfil = () => {
               }}
             >
               <Box sx={{ mb: 7 }}>
-                <NavBar />
+                <NavBar user={dataUser} />
               </Box>
               <Toolbar />
               {}
@@ -107,7 +106,6 @@ const Perfil = () => {
                   data={dataUser}
                 />
                 <ContactsSidebar />
-                <Grid container spacing={0}></Grid>
               </Grid>
             </Box>
           </Box>

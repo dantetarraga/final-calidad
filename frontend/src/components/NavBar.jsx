@@ -9,6 +9,8 @@ import IconButton from "@mui/material/IconButton";
 import InputBase from "@mui/material/InputBase";
 import Toolbar from "@mui/material/Toolbar";
 import { alpha, styled } from "@mui/material/styles";
+import PropTypes from "prop-types";
+import { useEffect, useState } from "react";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -39,7 +41,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
   "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
     width: "100%",
@@ -52,8 +53,19 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const NavBar = () => {
+const NavBar = ({ user }) => {
+  const [notifications, setNotifications] = useState(0);
   const drawerWidth = 282;
+
+  const countNotifications = () =>
+    setNotifications(user.solicitudes_amistad.length);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      countNotifications();
+    }, 1000);
+    return () => clearTimeout(timeoutId);
+  }, []);
 
   return (
     <AppBar
@@ -93,7 +105,7 @@ const NavBar = () => {
             aria-label="show 17 new notifications"
             color="inherit"
           >
-            <Badge badgeContent={17} color="error">
+            <Badge badgeContent={notifications} color="error">
               <NotificationsIcon />
             </Badge>
           </IconButton>
@@ -107,12 +119,16 @@ const NavBar = () => {
               height: 48,
             }}
           >
-            <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+            <Avatar alt={user.nombre} src={user.foto_perfil} />
           </IconButton>
         </Box>
       </Toolbar>
     </AppBar>
   );
+};
+
+NavBar.propTypes = {
+  user: PropTypes.object,
 };
 
 export default NavBar;

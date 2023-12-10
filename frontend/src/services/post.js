@@ -47,3 +47,19 @@ export const getAllPosts = async () => {
   };
   return await ajax(config);
 };
+
+export const reactionPost = async (postId, reactionType) => {
+  const config = {
+    method: "POST",
+    url: `http://localhost:3000/reaccionar/${postId}`,
+    withCredentials: true,
+    data: { reactionType },
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  return await ajax(config);
+};

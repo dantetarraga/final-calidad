@@ -11,5 +11,6 @@ postRouter.post(
 );
 postRouter.post("/postear", PostController.createPostWithOutMultimedia);
 postRouter.get("/publicaciones", PostController.getPosts);
+postRouter.post("/reaccionar/:postId", PostController.reactionPost);
 
 export default postRouter;

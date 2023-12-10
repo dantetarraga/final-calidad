@@ -73,6 +73,40 @@ class PostController {
 
     return res.status(200).json(posts);
   }
+
+  static async reactionPost(req, res) {
+    try {
+      const postId = req.params.postId;
+      const userId = req.session.userId;
+      const { reactionType } = req.body;
+
+      const post = await Post.findById(postId);
+
+      if (!post) {
+        return res.status(404).json({ error: "Post no encontrado" });
+      }
+
+      const existingReaction = post.reaccion.find(
+        (reaction) => reaction.usuario.toString() === userId
+      );
+
+      if (existingReaction) {
+        return res.status(400).json({ error: "El usuario ya ha reaccionado" });
+      }
+
+      post.reaccion.push({
+        usuario: userId,
+        tipo: reactionType,
+      });
+
+      await post.save();
+
+      return res.status(200).json({ message: "Reacción agregada con éxito" });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: "Error interno del servidor" });
+    }
+  }
 }
 
 export default PostController;

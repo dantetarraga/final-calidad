@@ -41,3 +41,18 @@ export const suggestFriends = async () => {
 
   return ajax(config);
 };
+
+export const addFriend = async (receptorId) => {
+  const config = {
+    method: "POST",
+    url: "http://localhost:3000/enviar-solicitud",
+    withCredentials: true,
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    data: { receptorId },
+  };
+
+  return ajax(config);
+};

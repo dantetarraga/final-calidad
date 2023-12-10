@@ -55,7 +55,7 @@ const ContactsSidebar = () => {
           }
         >
           {contacts.map((contact) => (
-            <Contact key={contact.id} contacto={contact} />
+            <Contact key={contact._id} contacto={contact} />
           ))}
         </List>
         <List
@@ -87,7 +87,7 @@ const ContactsSidebar = () => {
           }
         >
           {suggestions.map((user) => (
-            <FriendSuggestion key={user.id} user={user} />
+            <FriendSuggestion key={user._id} user={user} />
           ))}
         </List>
       </Stack>

@@ -1,6 +1,7 @@
 import { Box, Stack, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
+import { reactionPost } from "../services/post";
 import { getInfoUser } from "../services/user";
 import CommentSection from "./CommentSection";
 import PostActions from "./PostActions";
@@ -16,6 +17,11 @@ const Post = ({ post, foto_perfil, idUser }) => {
   }, [post]);
 
   const getDatePost = () => post.fecha_publicacion.split(",")[0];
+
+  const handleReactionPost = async () => {
+    console.log("Reaccionar a post", post._id);
+    await reactionPost(post._id, "me_gusta");
+  };
 
   return (
     <>
@@ -52,7 +58,7 @@ const Post = ({ post, foto_perfil, idUser }) => {
               />
             );
           })}
-          <PostActions />
+          <PostActions idPost={post._id} reaction={handleReactionPost} />
           <CommentSection
             idPost={post._id}
             foto_perfil={foto_perfil}

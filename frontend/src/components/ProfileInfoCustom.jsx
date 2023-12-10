@@ -14,8 +14,6 @@ import ListItemText from "@mui/material/ListItemText";
 import PropTypes from "prop-types";
 
 const ProfileInfoCustom = ({ dataUser }) => {
-  console.log(dataUser);
-
   const useNameAndPhoto = [
     {
       text: String(dataUser.nombre).concat(" ", dataUser.apellidos),
