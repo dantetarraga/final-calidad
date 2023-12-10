@@ -17,6 +17,22 @@ class AuthController {
     }
   }
 
+  static async modify(req, res) {
+    try {
+      const userId = req.session.userId;
+      
+      const user = new User({ ...req.body, _id: userId });
+
+      await user.save();
+
+      return res
+        .status(201)
+        .json({ usuario: user, message: "Usuario creado!" });
+    } catch (err) {
+      return res.status(500).json(err.message);
+    }
+  }
+
   static async login(req, res) {
     const { correo, contraseña } = req.body;
     try {

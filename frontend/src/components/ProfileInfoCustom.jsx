@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect,useState,useHistory } from "react";
 import PropTypes from "prop-types";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
@@ -14,22 +14,37 @@ import EditCalendarIcon from "@mui/icons-material/EditCalendar";
 import CakeIcon from "@mui/icons-material/Cake";
 import EditIcon from "@mui/icons-material/Edit";
 import { Button } from "@mui/material";
+import { getDataUser } from "../services/user";
 
 const ProfileInfoCustom = ({ foto_perfil }) => {
   const [dataUser, setDataUser] = useState({});
   const [imgUser, setImgUser] = useState({});
+  const valor = localStorage.getItem('clave');
+ // const [dataUser, setDataUser] = useState({});
+ const [isEditing, setIsEditing] = useState(false);
+ const [editedText, setEditedText] = useState(); // Opción de texto original
+
+ 
+ useEffect(() => {
+  const token = localStorage.getItem("token");
+
+  (async () => setDataUser(await getDataUser(token)))();
+  (async () => {
+    const imageUrl = arrayBufferToBase64(await getImgPerfil(token));
+    setImgUser(imageUrl);
+  })();
+}, []);
 
   const useNameAndPhoto = [
     {
-      text: String(dataUser.nombre).concat(" ", dataUser.apellidos),
-      icon: <Avatar src={String(imgUser)} alt="Foto de perfil" />,
+      text: String(dataUser.nombre).concat( " " , dataUser.apellidos),
+      icon: <Avatar src={String('http://localhost:5173/public/imagenes/6073873.png')} alt="Foto de perfil" />,
     },
   ];
   const menuOptions = [
-    { text: "Soltero", icon: <FavoriteIcon /> },
-    { text: "sexo", icon: <WcIcon /> },
-    { text: "fecha_registro", icon: <EditCalendarIcon /> },
-    { text: "fecha_nacimiento", icon: <CakeIcon /> },
+    { text: String(dataUser.sexo), icon: <WcIcon /> },
+    { text: String(dataUser.fecha_registro), icon: <EditCalendarIcon /> },
+    { text: String(dataUser.fecha_nacimiento), icon: <CakeIcon /> },
   ];
 
   return (
@@ -45,6 +60,8 @@ const ProfileInfoCustom = ({ foto_perfil }) => {
         width: "100%",
       }}
     >
+      
+   
       {/* Sección de la foto de perfil */}
       {useNameAndPhoto.map((option) => (
         <Avatar
@@ -58,15 +75,7 @@ const ProfileInfoCustom = ({ foto_perfil }) => {
         />
       ))}
 
-      {/* Sección del nombre de usuario */}
-      {useNameAndPhoto.map((option) => (
-        <Box key={option.text} sx={{ textAlign: "center" }}>
-          <ListItemText
-            primary={option.text}
-            sx={{ fontSize: "50px", fontWeight: "bold" }}
-          />
-        </Box>
-      ))}
+ 
 
       {/* Sección de las opciones del menú mostradas en 3 columnas y 2 filas */}
       <List
@@ -87,11 +96,16 @@ const ProfileInfoCustom = ({ foto_perfil }) => {
                 },
               }}
             >
+
+             
               <ListItemIcon>{option.icon}</ListItemIcon>
+             
+
               <ListItemText primary={option.text} />
             </ListItemButton>
           </ListItem>
         ))}
+      
       </List>
       <Box sx={{ flexGrow: 1 }} />
       <Button color="secondary" variant="contained">
