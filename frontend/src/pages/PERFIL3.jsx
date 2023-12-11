@@ -1,37 +1,49 @@
+import React, { useEffect, useState } from "react";
 import {
-  Avatar,
   Box,
-  CssBaseline,
+  Button,
   Grid,
   Paper,
-  Stack,
+  Typography,
+  IconButton,
+  Card,
+  CardContent,
+  CardMedia,
   ThemeProvider,
+  Avatar,
+  CssBaseline,
+  Stack,
   Toolbar,
   createTheme,
 } from "@mui/material";
-import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
-import { arrayBufferToBase64 } from "../../utils/arrayBuffer";
-import NavBar from "../components/NavBar";
 import Post from "../components/Post";
-import PostForm from "../components/PostForm";
+import NavBar from "../components/NavBar";
 import SideBar from "../components/SideBar";
-import { getAllPosts } from "../services/post";
+import SideBarFriends from "../components/SideBarFriends";
+import PostForm from "../components/PostForm";
+import ProfileInfo from "../components/ProfileInfo";
+import ProfileInfoCustom from "../components/ProfileInfoCustom";
+
+import PropTypes from "prop-types";
 import { getDataUser, getImgPerfil } from "../services/user";
 
-// const Search = styled("div")(({ theme }) => ({
-//   borderRadius: theme.shape.borderRadius,
-//   display: "flex",
-//   flexGrow: 1,
-//   marginLeft: theme.spacing(1),
-//   backgroundColor: "#434557",
-//   "&:hover": {
-//     backgroundColor: alpha(theme.palette.common.white, 0.25),
-//   },
-//   width: "100%",
-// }));
+const MainContent2 = ({ foto_perfil, data }) => (
+  <Grid item xs={12} md={8} style={{ overflow: "auto" }}>
+    <Stack spacing={3}>
+      <Paper style={{ minHeight: "200px", padding: "0 15%" }}>
+        <ProfileInfoCustom foto_perfil={foto_perfil} />
+      </Paper>
+      <Paper style={{ minHeight: "200px", padding: "0 15%" }}>
+        <ProfileInfo data={data}></ProfileInfo>
+      </Paper>
+    </Stack>
+  </Grid>
+);
 
-const dataTest = Array.from({ length: 50 }, (_, index) => index + 1);
+MainContent2.propTypes = {
+  foto_perfil: PropTypes.string,
+  data: PropTypes.array,
+};
 
 const MainContent = ({ foto_perfil, data }) => (
   <Grid item xs={12} md={8} style={{ overflow: "auto" }}>
@@ -86,15 +98,6 @@ const Sidebar = () => (
   </Grid>
 );
 
-// const StyledInputBase = styled(InputBase)(({ theme }) => ({
-//   "& .MuiInputBase-input": {
-//     padding: theme.spacing(1, 1, 1, 0),
-//     // vertical padding + font size from searchIcon
-//     paddingLeft: `calc(1em + ${theme.spacing(1)})`,
-//     width: "100%",
-//   },
-// }));
-
 const theme = createTheme({
   palette: {
     mode: "dark",
@@ -124,7 +127,7 @@ const theme = createTheme({
   },
 });
 
-const HomePage = () => {
+const Perfil = () => {
   const [dataUser, setDataUser] = useState({});
   const [posts, setPosts] = useState([]);
 
@@ -138,33 +141,41 @@ const HomePage = () => {
     (async () => setPosts(await getAllPosts()))();
   }, []);
 
+  const cardGeneral = {
+    // padding:"45px",
+    background: { default: "#171923" },
+  };
+
   return (
-    <div>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Box sx={{ display: "flex", flexGrow: 1 }}>
-          <SideBar anchor="left" />
-          <Box
-            sx={{
-              flexGrow: 1,
-              ml: 5,
-            }}
-          >
-            <Box sx={{ mb: 7 }}>
-              <NavBar />
+    <div style={cardGeneral}>
+      <div>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Box sx={{ display: "flex", flexGrow: 1 }}>
+            <SideBar anchor="left" />
+            <Box sx={{ flexGrow: 1, ml: 5 }}>
+              <Box sx={{ mb: 7 }}>
+                <NavBar />
+              </Box>
+              <Toolbar />
+              {}
+              <Grid container spacing={5}>
+                <MainContent2 foto_perfil={dataUser.foto_perfil} data={posts} />
+                <Grid container spacing={0}>
+                  <MainContent
+                    foto_perfil={dataUser.foto_perfil}
+                    data={posts}
+                  />
+                  
+                </Grid>
+              </Grid>
             </Box>
-            <Toolbar />
-            {}
-            <Grid container spacing={5}>
-              <MainContent foto_perfil={dataUser.foto_perfil} data={posts} />
-              <Sidebar />
-            </Grid>
+            <SideBarFriends anchor="right" />
           </Box>
-        </Box>
-        <Box></Box>
-      </ThemeProvider>
+        </ThemeProvider>
+      </div>
     </div>
   );
 };
 
-export default HomePage;
+export default Perfil;
